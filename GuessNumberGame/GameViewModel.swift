@@ -7,24 +7,46 @@
 
 import Foundation
 
+struct Result {
+  var submitValue: String
+  var checkResult: String
+}
+
+struct GamesData {
+  var answerLength: Int = 4
+  var answer: String?
+  var inputValue: String?
+  var changeNumbers: Int = 6
+  var resultList: [Result]?
+}
+
 class GameViewModel: NSObject {
+    
+  var results: [Result]?
+  var gameData = GamesData()
+  
+    init(length: Int = 4) {
+      gameData.answerLength = length
+    }
 
-  private let length: Int
-  private(set) var answer: String!
+    func start() {
+      gameData.answer = generateAnswer()
+    }
 
-  init(length: Int = 4) {
-    self.length = length
-  }
-
-  func start() {
-    self.answer = generateAnswer()
-  }
-
-  func submit() -> String {
-    return "1A1B"
-  }
+    func submit(input: String) -> String {
+      gameData.inputValue = input
+      
+      return "1A1B"
+    }
 
   private func generateAnswer() -> String {
-    return "1234"
-  }
+      var string = String()
+    while string.count < gameData.answerLength {
+        let character = String(Int.random(in: 0...9))
+        if !string.contains(character) {
+          string.append(character)
+        }
+      }
+      return string
+    }
 }

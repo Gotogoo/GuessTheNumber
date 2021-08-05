@@ -19,22 +19,28 @@ class GameViewModelSpec: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
 
-    func testValidationResult() throws {
-      var viewModel = GameViewModel()
+    func testGeneratedAnswer() throws {
+      let viewModel = GameViewModel()
 
       viewModel.start()
-      let result = viewModel.submit()
-
-      XCTAssertEqual(result, "1A1B")
+      
+      XCTAssertEqual(viewModel.gameData.answer!.count, 4)
+      XCTAssertEqual(Set(viewModel.gameData.answer!).count, 4)
+      XCTAssertNotNil(Int(viewModel.gameData.answer!))
     }
 
-    func testValidationResult2() throws {
-      var viewModel = GameViewModel()
+    func testSubmit() throws {
+      let viewModel = GameViewModel()
 
       viewModel.start()
-      let result = viewModel.submit()
+      let result = viewModel.submit(input: "1234")
+      let inputValue = viewModel.gameData.inputValue!
 
-      XCTAssertEqual(result, "0A1B")
+//      XCTAssertEqual(result, "1A1B")
+      XCTAssertEqual(inputValue.count, 4)
+      XCTAssertEqual(Set(inputValue).count, 4)
+      XCTAssertNotNil(Int(inputValue))
+      
     }
 
     func testPerformanceExample() throws {
