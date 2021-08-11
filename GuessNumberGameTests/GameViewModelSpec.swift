@@ -29,19 +29,35 @@ class GameViewModelSpec: XCTestCase {
       XCTAssertNotNil(Int(viewModel.gameData.answer!))
     }
 
-    func testSubmit() throws {
+    func testSubmitInputErrorValue() throws {
       let viewModel = GameViewModel()
 
       viewModel.start()
-      let result = viewModel.submit(input: "1234")
-      let inputValue = viewModel.gameData.inputValue!
-
-//      XCTAssertEqual(result, "1A1B")
-      XCTAssertEqual(inputValue.count, 4)
-      XCTAssertEqual(Set(inputValue).count, 4)
-      XCTAssertNotNil(Int(inputValue))
-      
+      let errorResult = viewModel.submit(input: "1224")
+      XCTAssertEqual(errorResult, "error input value!")
     }
+  
+  func testSubmitCount() throws {
+    let viewModel = GameViewModel()
+    
+    viewModel.start()
+    let resultOne = viewModel.submit(input: "1234")
+    let resultTwo = viewModel.submit(input: "1524")
+    let resultThree = viewModel.submit(input: "1264")
+    let resultFour = viewModel.submit(input: "1724")
+    let resultFive = viewModel.submit(input: "6524")
+    let resultSix = viewModel.submit(input: "8924")
+    XCTAssertEqual(resultSix, "game failure!")
+  }
+  
+  func testSubmitResult() throws {
+    let viewModel = GameViewModel()
+    viewModel.gameData.answer = "1234"
+    
+    viewModel.start()
+    let result = viewModel.submit(input: "1524")
+    XCTAssertEqual(result, "2A3B")
+  }
 
     func testPerformanceExample() throws {
         // This is an example of a performance test case.
