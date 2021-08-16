@@ -7,18 +7,23 @@
 
 import Foundation
 
+enum AttempResult {
+  case invalidInput
+  case runningOut
+  case incorrect(hint: String)
+}
+
 struct GameResult {
-  var submitValue: String?
-  var checkResult: String?
+  var submitValue: String
+  var checkResult: AttempResult
 }
 
 struct GamesData {
   var answerLength: Int = 4
-  var answer: String?
-  var inputValue: String?
-  var changeNumbers: Int = 6
-  var resultList: [GameResult]?
-  var errorMessage: String = ""
+  var attempNumber: Int = 6
+  var answer: String
+  var input: String
+  var results: [GameResult]
 }
 
 class GameViewModel: NSObject {
@@ -38,12 +43,17 @@ class GameViewModel: NSObject {
     gameData.answer = answer
   }
 
-  func submit(input: String) -> String {
-    gameData.inputValue = input
+  func submit(input: String) -> [GameResult] {
+    gameData.input = input
     
     guard validateInputValue(inputValue: input) else {
-      gameData.errorMessage = "error input value!"
-      return gameData.errorMessage
+      gameData.results?.append(
+        GameResult(
+          submitValue: input,
+          checkResult: "Invalid input!"
+        )
+      )
+      return gameData.results ?? []
     }
     
     var containNumbers = 0, positionCorrectNumber = 0
@@ -59,14 +69,20 @@ class GameViewModel: NSObject {
     
     result.submitValue = input
     result.checkResult = "\(positionCorrectNumber)A\(containNumbers)B"
-    gameData.resultList?.append(result)
-    gameData.changeNumbers -= 1
+    gameData.results?.append(result)
+    gameData.attempNumber -= 1
     
-    if gameData.changeNumbers <= 0 {
-      return "game failure!"
+    if gameData.attempNumber <= 0 {
+      gameData.results?.append(
+        GameResult(
+          submitValue: input,
+          checkResult: "Game failure!"
+        )
+      )
+      return gameData.results ?? []
     }
     
-    return result.checkResult!
+    return gameData.results ?? []
   }
 
   private func generateAnswer() -> String {
