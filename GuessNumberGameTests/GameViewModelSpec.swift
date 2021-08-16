@@ -21,8 +21,7 @@ class GameViewModelSpec: XCTestCase {
 
     func testGeneratedAnswer() throws {
       let viewModel = GameViewModel()
-
-      viewModel.start()
+      viewModel.resetAnswer("1234")
       
       XCTAssertEqual(viewModel.gameData.answer!.count, 4)
       XCTAssertEqual(Set(viewModel.gameData.answer!).count, 4)
@@ -31,39 +30,55 @@ class GameViewModelSpec: XCTestCase {
 
     func testSubmitInputErrorValue() throws {
       let viewModel = GameViewModel()
-
-      viewModel.start()
+      viewModel.resetAnswer("1234")
+      
       let errorResult = viewModel.submit(input: "1224")
       XCTAssertEqual(errorResult, "error input value!")
     }
   
   func testSubmitCount() throws {
     let viewModel = GameViewModel()
+    viewModel.resetAnswer("1982")
     
-    viewModel.start()
     let resultOne = viewModel.submit(input: "1234")
     let resultTwo = viewModel.submit(input: "1524")
     let resultThree = viewModel.submit(input: "1264")
     let resultFour = viewModel.submit(input: "1724")
     let resultFive = viewModel.submit(input: "6524")
     let resultSix = viewModel.submit(input: "8924")
+    
     XCTAssertEqual(resultSix, "game failure!")
   }
   
   func testSubmitResult() throws {
     let viewModel = GameViewModel()
-    viewModel.gameData.answer = "1234"
+    viewModel.resetAnswer("1234")
     
-    viewModel.start()
     let result = viewModel.submit(input: "1524")
-    XCTAssertEqual(result, "2A3B")
+    XCTAssertEqual(result, "2A1B")
   }
-
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
-    }
-
+  
+  func testSubmitResult1() throws {
+    let viewModel = GameViewModel()
+    viewModel.resetAnswer("1234")
+    
+    let result = viewModel.submit(input: "5678")
+    XCTAssertEqual(result, "0A0B")
+  }
+  
+  func testSubmitResult2() throws {
+    let viewModel = GameViewModel()
+    viewModel.resetAnswer("1234")
+    
+    let result = viewModel.submit(input: "5278")
+    XCTAssertEqual(result, "1A0B")
+  }
+  
+  func testSubmitResult3() throws {
+    let viewModel = GameViewModel()
+    viewModel.resetAnswer("1234")
+    
+    let result = viewModel.submit(input: "3789")
+    XCTAssertEqual(result, "0A1B")
+  }
 }

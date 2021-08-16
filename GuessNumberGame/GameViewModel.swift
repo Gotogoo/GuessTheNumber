@@ -31,7 +31,11 @@ class GameViewModel: NSObject {
   }
 
   func start() {
-    gameData.answer = generateAnswer()
+    resetAnswer(generateAnswer())
+  }
+  
+  func resetAnswer(_ answer: String) {
+    gameData.answer = answer
   }
 
   func submit(input: String) -> String {
@@ -44,17 +48,15 @@ class GameViewModel: NSObject {
     
     var containNumbers = 0, positionCorrectNumber = 0
     let answer = gameData.answer!
-    
-    input.enumerated().forEach { index, character in
-      if character == answer[answer.index(answer.startIndex, offsetBy: index)] {
+
+    zip(input, answer).forEach {
+      if $0 == $1 {
         positionCorrectNumber += 1
-        return
-      }
-      
-      if answer.contains(character) {
-        containNumbers += 1
       }
     }
+
+    containNumbers = Set(input).intersection(Set(answer)).count - positionCorrectNumber
+    
     result.submitValue = input
     result.checkResult = "\(positionCorrectNumber)A\(containNumbers)B"
     gameData.resultList?.append(result)
