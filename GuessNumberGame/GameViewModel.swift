@@ -16,21 +16,39 @@ enum AttempResult {
 struct GameResult {
   var submitValue: String
   var checkResult: AttempResult
+  
+  init(
+    submitValue: String = "",
+    checkResult: AttempResult = .incorrect(hint: "")
+    ) {
+    self.submitValue = submitValue
+    self.checkResult = checkResult
+  }
 }
 
-struct GamesData {
+extension AttempResult: Equatable {
+  
+}
+
+extension GameResult: Equatable {
+  static func == (lhs: GameResult, rhs: GameResult) -> Bool {
+    lhs.submitValue == rhs.submitValue && lhs.checkResult == rhs.checkResult
+  }
+}
+
+public struct GamesData {
   var answerLength: Int = 4
   var attempNumber: Int = 6
-  var answer: String
-  var input: String
-  var results: [GameResult]
+  var answer: String?
+  var input: String?
+  var results: [GameResult] = []
 }
 
 class GameViewModel: NSObject {
     
   var result = GameResult()
   var gameData = GamesData()
-  
+
   init(length: Int = 4) {
     gameData.answerLength = length
   }
@@ -47,13 +65,13 @@ class GameViewModel: NSObject {
     gameData.input = input
     
     guard validateInputValue(inputValue: input) else {
-      gameData.results?.append(
+      gameData.results.append(
         GameResult(
           submitValue: input,
-          checkResult: "Invalid input!"
+          checkResult: .invalidInput
         )
       )
-      return gameData.results ?? []
+      return gameData.results
     }
     
     var containNumbers = 0, positionCorrectNumber = 0
@@ -68,21 +86,21 @@ class GameViewModel: NSObject {
     containNumbers = Set(input).intersection(Set(answer)).count - positionCorrectNumber
     
     result.submitValue = input
-    result.checkResult = "\(positionCorrectNumber)A\(containNumbers)B"
-    gameData.results?.append(result)
+    result.checkResult = .incorrect(hint: "\(positionCorrectNumber)A\(containNumbers)B")
+    gameData.results.append(result)
     gameData.attempNumber -= 1
     
     if gameData.attempNumber <= 0 {
-      gameData.results?.append(
+      gameData.results.append(
         GameResult(
           submitValue: input,
-          checkResult: "Game failure!"
+          checkResult: .runningOut
         )
       )
-      return gameData.results ?? []
+      return gameData.results
     }
     
-    return gameData.results ?? []
+    return gameData.results
   }
 
   private func generateAnswer() -> String {
