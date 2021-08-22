@@ -7,20 +7,31 @@
 
 import Foundation
 
-enum AttempResult {
+enum AttempResult: Hashable {
   case invalidInput
   case runningOut
   case incorrect(hint: String)
+  
+  var message: String {
+    switch self {
+    case .incorrect(let hint):
+      return hint
+    case .invalidInput:
+      return "invalid input"
+    default:
+      return "running out"
+    }
+  }
 }
 
-struct GameResult {
+struct GameResult: Hashable {
   var submitValue: String
   var checkResult: AttempResult
   
   init(
     submitValue: String = "",
     checkResult: AttempResult = .incorrect(hint: "")
-    ) {
+  ) {
     self.submitValue = submitValue
     self.checkResult = checkResult
   }
@@ -45,14 +56,14 @@ public struct GamesData {
 }
 
 class GameViewModel: NSObject {
-    
+  
   var result = GameResult()
   var gameData = GamesData()
-
+  
   init(length: Int = 4) {
     gameData.answerLength = length
   }
-
+  
   func start() {
     resetAnswer(generateAnswer())
   }
@@ -60,7 +71,7 @@ class GameViewModel: NSObject {
   func resetAnswer(_ answer: String) {
     gameData.answer = answer
   }
-
+  
   func submit(input: String) -> [GameResult] {
     gameData.input = input
     
@@ -76,18 +87,23 @@ class GameViewModel: NSObject {
     
     var containNumbers = 0, positionCorrectNumber = 0
     let answer = gameData.answer!
-
+    
     zip(input, answer).forEach {
       if $0 == $1 {
         positionCorrectNumber += 1
       }
     }
-
+    
     containNumbers = Set(input).intersection(Set(answer)).count - positionCorrectNumber
     
     result.submitValue = input
     result.checkResult = .incorrect(hint: "\(positionCorrectNumber)A\(containNumbers)B")
     gameData.results.append(result)
+    
+    if input == answer {
+      return gameData.results
+    }
+    
     gameData.attempNumber -= 1
     
     if gameData.attempNumber <= 0 {
@@ -102,7 +118,7 @@ class GameViewModel: NSObject {
     
     return gameData.results
   }
-
+  
   private func generateAnswer() -> String {
     var string = String()
     while string.count < gameData.answerLength {

@@ -10,31 +10,31 @@ import XCTest
 @testable import GuessNumberGame
 
 class GameViewModelSpec: XCTestCase {
-
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
-
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
-
-    func testGeneratedAnswer() throws {
-      let viewModel = GameViewModel()
-      viewModel.resetAnswer("1234")
-      
-      XCTAssertEqual(viewModel.gameData.answer!.count, 4)
-      XCTAssertEqual(Set(viewModel.gameData.answer!).count, 4)
-      XCTAssertNotNil(Int(viewModel.gameData.answer!))
-    }
-
-    func testSubmitInputErrorValue() throws {
-      let viewModel = GameViewModel()
-      viewModel.resetAnswer("1234")
-      
-      let errorResult = viewModel.submit(input: "1224")
-      XCTAssertEqual(errorResult, [GameResult(submitValue: "1224", checkResult: .invalidInput)])
-    }
+  
+  override func setUpWithError() throws {
+    // Put setup code here. This method is called before the invocation of each test method in the class.
+  }
+  
+  override func tearDownWithError() throws {
+    // Put teardown code here. This method is called after the invocation of each test method in the class.
+  }
+  
+  func testGeneratedAnswer() throws {
+    let viewModel = GameViewModel()
+    viewModel.resetAnswer("1234")
+    
+    XCTAssertEqual(viewModel.gameData.answer!.count, 4)
+    XCTAssertEqual(Set(viewModel.gameData.answer!).count, 4)
+    XCTAssertNotNil(Int(viewModel.gameData.answer!))
+  }
+  
+  func testSubmitInputErrorValue() throws {
+    let viewModel = GameViewModel()
+    viewModel.resetAnswer("1234")
+    
+    let errorResult = viewModel.submit(input: "1224")
+    XCTAssertEqual(errorResult, [GameResult(submitValue: "1224", checkResult: .invalidInput)])
+  }
   
   func testSubmitCount() throws {
     let viewModel = GameViewModel()
