@@ -77,7 +77,6 @@ struct ContentView: View {
   
   private func setUpGameStart() {
     viewModel.start()
-    print(viewModel.gameData.answer!)
     isGameStart = false
   }
   private func submit() {
@@ -85,9 +84,7 @@ struct ContentView: View {
     inputValue = ""
     
     gameResult.forEach { item in
-      print(item.submitValue, item.checkResult)
-      
-      if item.checkResult.message == "2A2B" {
+      if item.checkResult.message == "4A0B" {
         showingAlert = true
         isSuccess = true
       }
@@ -103,9 +100,3 @@ struct ContentView: View {
     }
   }
 }
-
-//struct ContentView_Previews: PreviewProvider {
-//  static var previews: some View {
-//    ContentView()
-//  }
-//}

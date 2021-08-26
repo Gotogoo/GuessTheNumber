@@ -100,7 +100,6 @@ class GameViewModelSpec: XCTestCase {
     viewModel.resetAnswer("1234")
     
     let result = viewModel.submit(input: "3789")
-    print(result)
     XCTAssertEqual(result, [GameResult(submitValue: "3789", checkResult: .incorrect(hint: "0A1B"))])
   }
 }

@@ -69,6 +69,7 @@ class GameViewModel: NSObject {
   }
   
   func resetAnswer(_ answer: String) {
+    print("answer:", answer)
     gameData.answer = answer
   }
   
@@ -131,9 +132,11 @@ class GameViewModel: NSObject {
   }
   
   private func validateInputValue(inputValue: String) -> Bool {
-    guard Set(inputValue).count == 4 && Int(inputValue) != nil else {
-      return false
-    }
-    return true
+    Set(inputValue).count == 4 && Int(inputValue) != nil
+  }
+  
+  // TODO: game restart
+  func restart() {
+    
   }
 }
